@@ -4,30 +4,41 @@ import Box from "./Box";
 import NewBoxForm from "./NewBoxForm"
 
 /**
- * renders boxes and box add form
+ * renders boxes and box add form, manages state of box list
+ * 
+ * Props:
+ * none
+ * 
+ * State:
+ * - boxList: array containing objects with box parameters, like:
+ * [{width, height, backgroundColor, id},...]
+ * 
+ * App -> BoxList -> NewBoxForm, Box
  */
 function BoxList(){
   const [boxList, setBoxList] = useState([]);
 
-  function addBox(){
-
+  function addBox(formData){
+    let newBox = {...formData, id:uuid()}
+    setBoxList(boxList => [newBox,...boxList]);
   }
-  
-  function removeBox(){
 
+  function removeBox(id){
+    setBoxList(boxList => boxList.filter(box => (box.id !== id)));
   }
   
   return(
     
       <div className="BoxList">
-        <NewBoxForm />
+        <NewBoxForm addBox={addBox} />
       {boxList.map(box => (
         <Box 
           backgroundColor={box.backgroundColor}
           width={box.width}
           height={box.height}
           removeBox={removeBox}
-          key={uuid()}
+          id={box.id}
+          key={box.id}
         />
         )
       )}
@@ -37,3 +48,5 @@ function BoxList(){
     
   )
 }
+
+export default BoxList;
